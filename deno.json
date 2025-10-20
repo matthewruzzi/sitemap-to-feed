@@ -4,6 +4,7 @@
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@1.0.15",
-    "@std/cli": "jsr:@std/cli@1.0.23"
+    "@std/cli": "jsr:@std/cli@1.0.23",
+    "sitemapper": "npm:sitemapper@4.0.2"
   }
 }

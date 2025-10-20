@@ -4,6 +4,7 @@
     "jsr:@std/assert@1.0.15": "1.0.15",
     "jsr:@std/cli@1.0.23": "1.0.23",
     "jsr:@std/internal@^1.0.12": "1.0.12",
+    "npm:feed@5.1.0": "5.1.0",
     "npm:sitemapper@4.0.2": "4.0.2"
   },
   "jsr": {
@@ -106,6 +107,12 @@
       ],
       "bin": true
     },
+    "feed@5.1.0": {
+      "integrity": "sha512-qGNhgYygnefSkAHHrNHqC7p3R8J0/xQDS/cYUud8er/qD9EFGWyCdUDfULHTJQN1d3H3WprzVwMc9MfB4J50Wg==",
+      "dependencies": [
+        "xml-js"
+      ]
+    },
     "get-stream@5.2.0": {
       "integrity": "sha512-nBF+F1rAZVCu/p7rjzgA+Yb4lfYXrpl7a6VmJrU8wF9I1CKvP/QwPNZHnOlwbTkY6dvtFIzFMSyQXbLoTQPRpA==",
       "dependencies": [
@@ -196,6 +203,9 @@
         "lowercase-keys"
       ]
     },
+    "sax@1.4.1": {
+      "integrity": "sha512-+aWOz7yVScEGoKNd4PA10LZ8sk0A/z5+nXQG5giUO5rprX9jgYsTdov9qCchZiPIZezbZH+jRut8nPodFAX4Jg=="
+    },
     "sitemapper@4.0.2": {
       "integrity": "sha512-4gZXv12AvcJKEnxRrk+bU/kfyBgbNqoHE2u5hFKKO04hjSZQogAVppwNl+VXP71CXDW4VxpAQwPPz357aIHT6w==",
       "dependencies": [
@@ -215,6 +225,13 @@
     "wrappy@1.0.2": {
       "integrity": "sha512-l4Sp/DRseor9wL6EvV2+TuQn63dMkPjZ/sp9XkghTEbV9KlPS1xUsZ3u7/IQO4wxtcFB4bgpQPRcR3QCvezPcQ=="
     },
+    "xml-js@1.6.11": {
+      "integrity": "sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==",
+      "dependencies": [
+        "sax"
+      ],
+      "bin": true
+    },
     "yocto-queue@1.2.1": {
       "integrity": "sha512-AyeEbWOu/TAXdxlV9wmGcR0+yh2j3vYPGOECcIj2S7MkrLyC7ne+oye2BKTItt0ii2PHk4cDy+95+LshzbXnGg=="
     }
@@ -223,6 +240,7 @@
     "dependencies": [
       "jsr:@std/assert@1.0.15",
       "jsr:@std/cli@1.0.23",
+      "npm:feed@5.1.0",
       "npm:sitemapper@4.0.2"
     ]
   }

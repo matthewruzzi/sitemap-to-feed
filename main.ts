@@ -5,7 +5,7 @@ import * as cheerio from "cheerio";
 
 if (import.meta.main) {
   const args = parseArgs(Deno.args, {
-    string: ["sitemap", "title", "site", "output"],
+    string: ["sitemap", "title", "site", "output", "cache-file"],
     boolean: ["scrape-titles"],
     alias: { "output": "o" },
   });
@@ -15,6 +15,13 @@ if (import.meta.main) {
   const site = args.site ?? "https://sitemaps.org/";
   const outputFileName = args.output;
   const scrapeTitlesEnabled = args["scrape-titles"];
+  const cacheFile = args["cache-file"];
+
+  let kv;
+
+  if (cacheFile) {
+    kv = await Deno.openKv(cacheFile);
+  }
 
   const Sitemap = new Sitemapper({
     url: sitemapURL,
@@ -34,7 +41,7 @@ if (import.meta.main) {
 
   for (const page of sites) {
     if (scrapeTitlesEnabled) {
-      const pageTitle = await getPageTitle(page.loc);
+      const pageTitle = await getPageTitleCached(page.loc, kv);
       if (pageTitle) {
         feed.addItem({
           title: pageTitle,
@@ -77,5 +84,22 @@ async function getPageTitle(url: string): Promise<string | null> {
   } catch (error) {
     console.error(`Error fetching or parsing ${url}:`, error);
     return null;
+  }
+}
+
+async function getPageTitleCached(url: string, kv: Deno.Kv | undefined) {
+  if (kv) {
+    const entry = await kv.get(["titles", url]);
+    if (entry.value) {
+      return entry.value;
+    } else {
+      const title = await getPageTitle(url);
+      if (title) {
+        await kv.set(["titles", url], title);
+        return title;
+      }
+    }
+  } else {
+    return await getPageTitle(url);
   }
 }

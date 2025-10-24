@@ -6,9 +6,34 @@ import * as cheerio from "cheerio";
 if (import.meta.main) {
   const args = parseArgs(Deno.args, {
     string: ["sitemap", "title", "site", "output", "cache-file"],
-    boolean: ["scrape-titles"],
-    alias: { "output": "o" },
+    boolean: ["scrape-titles", "help"],
+    alias: { "output": "o", "help": "h" },
   });
+
+  if (args.help) {
+    console.log(`
+Usage: sitemap-to-feed [options]
+
+Options: 
+  --help, -h           Show this help message
+  --sitemap <url>      Sitemap URL
+  --title <title>      Feed title
+  --site <url>         Site homepage
+  --output, -o <file>  Write feed to file (optional)
+  --scrape-titles      Enable title scraping (optional)
+  --cache-file <file>  Path to save cache file (optional)
+
+Note: Output is always sent to stdout.
+
+Examples
+  sitemap-to-feed --sitemap "https://sitemaps.org/sitemap.xml" --title "Sitemaps" --site "https://sitemaps.org/"
+  sitemap-to-feed --sitemap "https://sitemaps.org/sitemap.xml" --title "Sitemaps" --site "https://sitemaps.org/" > "feed.rss"
+  sitemap-to-feed --sitemap "https://sitemaps.org/sitemap.xml" --title "Sitemaps" --site "https://sitemaps.org/" --output "feed.rss"
+  sitemap-to-feed --sitemap "https://sitemaps.org/sitemap.xml" --title "Sitemaps" --site "https://sitemaps.org/" --scrape-titles
+  sitemap-to-feed --sitemap "https://sitemaps.org/sitemap.xml" --title "Sitemaps" --site "https://sitemaps.org/" --scrape-titles --cache-file kv.sqlite3
+`);
+    Deno.exit(0);
+  }
 
   const sitemapURL = args.sitemap ?? "https://sitemaps.org/sitemap.xml";
   const title = args.title ?? "Sitemaps";

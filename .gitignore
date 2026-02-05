@@ -1,0 +1,11 @@
+*.xml
+*.rss
+*.sqlite3
+
+.DS_Store
+__MACOSX/
+.AppleDouble
+.LSOverride
+Icon[]
+._*
+*~

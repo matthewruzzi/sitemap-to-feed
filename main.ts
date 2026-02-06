@@ -5,7 +5,7 @@ import * as cheerio from "cheerio";
 
 if (import.meta.main) {
   const args = parseArgs(Deno.args, {
-    string: ["sitemap", "title", "site", "output", "cache-file"],
+    string: ["sitemap", "title", "site", "output", "cache-file", "filter"],
     boolean: ["scrape-titles", "help"],
     alias: { "output": "o", "help": "h" },
   });
@@ -22,6 +22,9 @@ Options:
   --output, -o <file>  Write feed to file (optional)
   --scrape-titles      Enable title scraping (optional)
   --cache-file <file>  Path to save cache file (optional)
+  --filter <regex>     Only include URLs matching this regex (optional)
+                       Pattern matches anywhere in URL (partial match)
+                       Use ^ and $ anchors for start/end matching
 
 Note: Output is always sent to stdout.
 
@@ -31,7 +34,10 @@ Examples
   sitemap-to-feed --sitemap "https://sitemaps.org/sitemap.xml" --title "Sitemaps" --site "https://sitemaps.org/" --output "feed.rss"
   sitemap-to-feed --sitemap "https://sitemaps.org/sitemap.xml" --title "Sitemaps" --site "https://sitemaps.org/" --scrape-titles
   sitemap-to-feed --sitemap "https://sitemaps.org/sitemap.xml" --title "Sitemaps" --site "https://sitemaps.org/" --scrape-titles --cache-file kv.sqlite3
-`);
+  sitemap-to-feed --sitemap "https://example.com/sitemap.xml" --title "Example Blog" --site "https://example.com/" --filter "blog"
+  sitemap-to-feed --sitemap "https://example.com/sitemap.xml" --title "Example Blog" --site "https://example.com/" --filter "/posts/"
+  sitemap-to-feed --sitemap "https://example.com/sitemap.xml" --title "Example Blog" --site "https://example.com/" --filter "^https://example\.com/blog/"
+`);    
     Deno.exit(0);
   }
 
@@ -41,6 +47,7 @@ Examples
   const outputFileName = args.output;
   const scrapeTitlesEnabled = args["scrape-titles"];
   const cacheFile = args["cache-file"];
+  const filterPattern = args.filter ? new RegExp(args.filter) : null;
 
   let kv;
 
@@ -65,6 +72,9 @@ Examples
   });
 
   for (const page of sites) {
+    if (filterPattern && !filterPattern.test(page.loc)) {
+      continue;
+    }
     if (scrapeTitlesEnabled) {
       const pageTitle = await getPageTitleCached(page.loc, kv);
       if (pageTitle) {
